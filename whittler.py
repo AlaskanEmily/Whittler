@@ -5,41 +5,21 @@
 
 from emirc import emirc
 from whittler import fmc, nesparty, askrec
+import ConfigParser
 
-# Using whittler:
-# ONE:
-#   you will need to make a bot account. This is because every user, bot or otherwise, needs a
-#   unique OAuth token. We can't share this between all Whittler users. This is why Nightbot runs
-#   on their own servers.
-# 
-# When you create a bot account, set username to equal this.
-username = "learn2automate"
+# get private info from ini file
+configParser = ConfigParser.RawConfigParser()
+configParser.read('config.ini')
+username = configParser.get('user-config','USER_NAME')
+oauth_token = configParser.get('user-config','OAUTH')
+channel = configParser.get('user-config','CHANNEL')
 
-# TWO:
-#   you will need to get the OAuth token for your bot account. If you sign in with a browser then
-#   you can use the link: http://twitchapps.com/tmi/
-#   DO NOT SHARE THIS OAUTH TOKEN WITH ANYONE!
-#   When you get this token, set it oath_token to equal it.
-oath_token = "oauth:by1fub4gf26xi99nz9ggu47hnns25r"
-
-# THREE:
-#   Finally, set the channel you want to run Whittler in below. This is the same as the username of
-#   the user whose stream you want Whittler to run in.
-#   It seems that this must always be lowercase.
-channel = "learn2run"
-
-# That should be it! GL, HF
-
-###################################################################################################
-# Everything below here is actual Whittler code. Don't change it if you just want to make Whittler
-# connect to a chat do bot things.
-###################################################################################################
 
 # Sanitize the password...
-if oath_token.startswith("oauth:"):
-    password = oath_token
+if oauth_token.startswith("oauth:"):
+    password = oauth_token
 else:
-    password = "oauth:" + oath_token
+    password = "oauth:" + oauth_token
 password = password.strip().rstrip()
 
 channel = channel.lower()
