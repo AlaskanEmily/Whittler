@@ -37,7 +37,7 @@ pastebin_key = "65fa91203e65620bc5ecb2b9a6790743"
 # Add limit based on the one who set it
 
 # This is the maximum number of games per user. If it's -1, then it's infinite.
-max_per_user = -1
+max_per_user = 2
 
 # You can give subs a different max than regular users.
 max_per_sub = max_per_user
@@ -116,7 +116,7 @@ def pick(games, user, sub_only):
     return games[0]
 
 def add_game(user_data, message):
-    
+    global guest_list_url
     if len(message) == 0:
         "You need to enter a game name"
     
@@ -137,7 +137,7 @@ def add_game(user_data, message):
             if game["user"] == user:
                 count += 1
                 if count == max:
-                    return user + " already has " + max + " games in the party!"
+                    return user + " already has " + str(max) + " games in the list!"
     
     game = {
         "sub":sub,
@@ -148,21 +148,18 @@ def add_game(user_data, message):
     
     num_games = len(games)
     
-    if num_games == 7:
-        # Kappa
-        return user + " invited " + message + " as the Memeth guest"
+    guest_list_url = ""
+    # This is kind of pointless, but it's fun.
+    last_digit = num_games % 10
+    if last_digit == 1:
+        suffix = "st"
+    elif last_digit == 2:
+        suffix = "nd"
+    elif last_digit == 3:
+        suffix = "rd"
     else:
-        # This is kind of pointless, but it's fun.
-        last_digit = num_games % 10
-        if last_digit == 1:
-            suffix = "st"
-        elif last_digit == 2:
-            suffix = "nd"
-        elif last_digit == 3:
-            suffix = "rd"
-        else:
-            suffix = "th"
-        return user + " invited " + message + " as the " + str(num_games) + suffix + " guest"
+        suffix = "th"
+    return user + " added " + message + " as the " + str(num_games) + suffix + " game"
 
 def remove_game(user_data, message):
     global guest_list_url
@@ -193,9 +190,9 @@ def remove_game(user_data, message):
 
 def remove_user(user_data, message):
     global guest_list_url
-    user = message
+    user = user_data["user"]
     if user_data["user"] != user or not user_data["mod"]:
-        return "Only mods can uninvite another user"
+        return "Only mods can remove another user"
     
     i = 0
     removed = 0
