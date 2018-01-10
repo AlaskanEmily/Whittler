@@ -4,7 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from emirc import emirc
-from whittler import fmc, nesparty
+from whittler import fmc, nesparty, askrec
 
 # Using whittler:
 # ONE:
@@ -13,20 +13,20 @@ from whittler import fmc, nesparty
 #   on their own servers.
 # 
 # When you create a bot account, set username to equal this.
-username = "WhittlerBot"
+username = "learn2automate"
 
 # TWO:
 #   you will need to get the OAuth token for your bot account. If you sign in with a browser then
 #   you can use the link: http://twitchapps.com/tmi/
 #   DO NOT SHARE THIS OAUTH TOKEN WITH ANYONE!
 #   When you get this token, set it oath_token to equal it.
-oath_token = ""
+oath_token = "oauth:by1fub4gf26xi99nz9ggu47hnns25r"
 
 # THREE:
 #   Finally, set the channel you want to run Whittler in below. This is the same as the username of
 #   the user whose stream you want Whittler to run in.
 #   It seems that this must always be lowercase.
-channel = "WhittlerBot"
+channel = "learn2run"
 
 # That should be it! GL, HF
 
@@ -49,18 +49,22 @@ server.connect("irc.chat.twitch.tv", 6667, username, username, username, passwor
 server.send_message(emirc.create_join(channel))
 
 def party_usage(user_data, message):
-    return "It's an NES party! :D Type !partycrash to add a new game! !guestlist will print what games are invited already."
+    return "To submit a game for me to suffer through use !add <game_title>. The entire list can be found with !queue. Use !ditch to take your games out of the queue. Available games: http://tuxnes.sourceforge.net/nesmapper.txt"
 
 # Commands dispatch. To add a new command to Whittler, write a new function that contains the
 # logic for the command, and add it to this dictionary.
 commands = {
     "fmc":fmc.fmc,
     "party":party_usage, # Since the commands are named in this file, the usage lives here, too.
-    "partycrash":nesparty.add_game,
-    "partytime":nesparty.get_game,
-    "uninvite":nesparty.remove_game,
-    "guestlist":nesparty.guestlist,
-    "partysover":nesparty.clear,
+    "add":nesparty.add_game,
+    "letsparty":nesparty.get_game,
+    "remove":nesparty.remove_game,
+    "ditch":nesparty.remove_user,
+    "queue":nesparty.guestlist,
+    "clear":nesparty.clear,
+    "wr":askrec.wr,
+    "pb":askrec.pb,
+    "cs":askrec.cs
 }
 
 def pong(message, server, user_data):
