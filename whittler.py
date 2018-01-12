@@ -4,7 +4,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from emirc import emirc
-from whittler import fmc, nesparty, askrec
+from whittler import fmc, nesparty
 import ConfigParser
 
 # get private info from ini file
@@ -41,10 +41,7 @@ commands = {
     "remove":nesparty.remove_game,
     "ditch":nesparty.remove_user,
     "queue":nesparty.guestlist,
-    "clear":nesparty.clear,
-    "wr":askrec.wr,
-    "pb":askrec.pb,
-    "cs":askrec.cs
+    "clear":nesparty.clear
 }
 
 def pong(message, server, user_data):
@@ -81,6 +78,16 @@ def privmsg(message, server, user_data):
         result = commands[command](user_data, command_msg)
         if len(result) > 0:
             server.send_message(emirc.create_privmsg(emirc.get_message_argument(message, 0), result))
+
+    #take all other commands and check them against askrec.ini    
+    else:
+        try:
+            configParser.read('askrec.ini')
+            response = configParser.get('main', command)
+            server.send_message(emirc.create_privmsg(emirc.get_message_argument(message, 0), response))
+        except:
+            print("no such command")
+
 
 # General dispatch for message types. If you want to add a new command to Whittler, see the
 # "commands" variable above.
