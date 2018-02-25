@@ -37,17 +37,17 @@ pastebin_key = "65fa91203e65620bc5ecb2b9a6790743"
 # Add limit based on the one who set it
 
 # This is the maximum number of games per user. If it's -1, then it's infinite.
-max_per_user = 2
+max_per_user = 1
 
 # You can give subs a different max than regular users.
-max_per_sub = 4
+max_per_sub = 2
 
 # This is the chance multiplier for the age of an entry. Increasing this increases the liklihood
 # that games that were added earlier will be picked.
 # For instance, if it is set to 2.0, then the oldest game is twice as likely to be picked than the
 # newest game.
 # Setting it to 1.0 means that all games are the same chance.
-time_multiplier = 1.5
+time_multiplier = 1
 
 games = []
 
@@ -169,8 +169,8 @@ def remove_game(user_data, message):
     
     try:
         if not user_data["mod"]:
-            if games[game_num]["user"] != user_data["user"]:
-                return "Only a mod can remove someone else's game"
+#            if games[game_num]["user"] != user_data["user"]:
+            return "Only a mod can remove individual games"
         
         del games[game_num]
         # Clear the guest list URL so it will have to be regenerated.
