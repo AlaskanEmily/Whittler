@@ -41,7 +41,9 @@ commands = {
     "remove":nesparty.remove_game,
     "ditch":nesparty.remove_user,
     "queue":nesparty.guestlist,
-    "clear":nesparty.clear
+    "clear":nesparty.clear,
+    "game":nesparty.set_game,
+    "undo":nesparty.undo
 }
 
 def pong(message, server, user_data):

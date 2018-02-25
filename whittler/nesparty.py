@@ -31,6 +31,8 @@ pastebin_key = "65fa91203e65620bc5ecb2b9a6790743"
 # Random Sub Game
 # Remove your own submission
 # Remove all submissions from a certain user
+# Undo to put the last Next Game back in the list
+# Game to display the last game chosen
 
 # Params:
 # Make older games more likely
@@ -52,6 +54,9 @@ time_multiplier = 1.0
 games = []
 
 guest_list_url = ""
+
+# The list of all picked games. An undo will pull from here and put back on to the games list
+picked_games = []
 
 # Private function. Picks a game for the given user. If user is empty, then any user is OK.
 # If sub_only, then only subs can be chosen.
@@ -221,6 +226,7 @@ def clear(user_data, message):
 def get_game(user_data, message):
     global guest_list_url
     global games
+    global picked_games
     if not user_data["mod"]:
         return "Only mods can get the next game"
     
@@ -232,11 +238,48 @@ def get_game(user_data, message):
     
     game = pick(games, "", subs_only)
     
+    picked_games.append(game)
+    
     if lower_message.find("keep") == -1:
         games.remove(game)
     
     guest_list_url = ""
     return "The game was " + game["game"] + ", invited by " + game["user"]
+
+def current_game(user_data, message):
+    if len(picked_games) == 0:
+        return "No current game"
+    else
+        return "Current game is " + picked_games[-1].message
+
+def set_game(user_data, message):
+    if not user_data["mod"]:
+        return "Only modes can set the game"
+    # Add a dummy game.
+    picked_games.append({
+        "sub":False,
+        "user":False,
+        "game":message
+    })
+
+def undo(user_data, message):
+    if not user_data["mod"]:
+        return "Only modes can undo"
+    if len(picked_games) == 0:
+        return "No game to undo"
+    
+    # Pop the last picked game.
+    game = picked_games.pop()
+    
+    if game["user"]:
+        # If the game was "real", that is not added using set_game, put it back on the queue
+        games.append(game)
+        return "Put game " + game["game"] + " back onto the queue"
+    else:
+        if len(picked_games):
+            return "Reset the current game to " + picked_games[-1]["game"]
+        else:
+            return "Unset the current game"
 
 def guestlist(user_data, message):
     global guest_list_url
