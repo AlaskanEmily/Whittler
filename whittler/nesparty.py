@@ -245,7 +245,7 @@ def current_game(user_data, message):
     if len(picked_games) == 0:
         return "No current game"
     else:
-        return "Current game is " + picked_games[-1].message
+        return "Current game is " + picked_games[-1]["game"]
 
 def set_game(user_data, message):
     if not user_data["mod"]:
@@ -258,6 +258,8 @@ def set_game(user_data, message):
     })
 
 def undo(user_data, message):
+    global guest_list_url
+    
     if not user_data["mod"]:
         return "Only modes can undo"
     if len(picked_games) == 0:
@@ -269,6 +271,7 @@ def undo(user_data, message):
     if game["user"]:
         # If the game was "real", that is not added using set_game, put it back on the queue
         games.append(game)
+        guest_list_url = ""
         return "Put game " + game["game"] + " back onto the queue"
     else:
         if len(picked_games):
