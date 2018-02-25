@@ -65,7 +65,7 @@ def privmsg(message, server, user_data):
     print ("Running command " + command)
     
     # If it starts with ! then check for the command first in the command scripts, then in the askrec file.
-    if command_raw[0][0] == "!" 
+    if command_raw[0][0] == "!":
         # If the command exists in the commands dictionary, run it.
         if command in commands:
             # If there are any args to the command, try to get them.

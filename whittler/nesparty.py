@@ -244,7 +244,7 @@ def get_game(user_data, message):
 def current_game(user_data, message):
     if len(picked_games) == 0:
         return "No current game"
-    else
+    else:
         return "Current game is " + picked_games[-1].message
 
 def set_game(user_data, message):
