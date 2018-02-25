@@ -42,7 +42,8 @@ commands = {
     "ditch":nesparty.remove_user,
     "queue":nesparty.guestlist,
     "clear":nesparty.clear,
-    "game":nesparty.set_game,
+    "setgame":nesparty.set_game,
+    "game":nesparty.current_game,
     "undo":nesparty.undo
 }
 
