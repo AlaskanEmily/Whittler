@@ -64,32 +64,33 @@ def privmsg(message, server, user_data):
     command = command_raw[0][1:]
     print ("Running command " + command)
     
-    # If it starts with ! and exists in the commands dictionary, execute the command.
-    if command_raw[0][0] == "!" and command in commands:
-        # If there are any args to the command, try to get them.
-        try:
-            command_msg = command_raw[1]
-            # Trim off a leading : if present
-            if command_msg.startswith(":"):
-                command_msg = command_msg[1:].strip().rstrip()
-        except:
-            command_msg = ""
-        print ("Using args " + command_msg)
+    # If it starts with ! then check for the command first in the command scripts, then in the askrec file.
+    if command_raw[0][0] == "!" 
+        # If the command exists in the commands dictionary, run it.
+        if command in commands:
+            # If there are any args to the command, try to get them.
+            try:
+                command_msg = command_raw[1]
+                # Trim off a leading : if present
+                if command_msg.startswith(":"):
+                    command_msg = command_msg[1:].strip().rstrip()
+            except:
+                command_msg = ""
+            print ("Using args " + command_msg)
+            
+            # Run the command, and respond if necessary.
+            result = commands[command](user_data, command_msg)
+            if len(result) > 0:
+                server.send_message(emirc.create_privmsg(emirc.get_message_argument(message, 0), result))
         
-        # Run the command, and respond if necessary.
-        result = commands[command](user_data, command_msg)
-        if len(result) > 0:
-            server.send_message(emirc.create_privmsg(emirc.get_message_argument(message, 0), result))
-
-    #take all other commands and check them against askrec.ini    
-    else:
-        try:
-            configParser.read('askrec.ini')
-            response = configParser.get('main', command)
-            server.send_message(emirc.create_privmsg(emirc.get_message_argument(message, 0), response))
-        except:
-            print("no such command")
-
+        #take all other commands and check them against askrec.ini    
+        else:
+            try:
+                configParser.read('askrec.ini')
+                result = configParser.get('main', command)
+                server.send_message(emirc.create_privmsg(emirc.get_message_argument(message, 0), result))
+            except:
+                print("no such command")
 
 # General dispatch for message types. If you want to add a new command to Whittler, see the
 # "commands" variable above.
