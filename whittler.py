@@ -29,7 +29,7 @@ server.connect("irc.chat.twitch.tv", 6667, username, username, username, passwor
 server.send_message(emirc.create_join(channel))
 
 def party_usage(user_data, message):
-    return "To submit a game for me to suffer through use !add <game_title>. The entire list can be found with !queue. Use !ditch to take your games out of the queue. Available games: http://tuxnes.sourceforge.net/nesmapper.txt"
+    return "To submit a game for me to suffer through use !add <game_title>. The entire list can be found with !queue. Use !ditch to take your games out of the queue. !nes or !snes will provide lists of incompatible games."
 
 # Commands dispatch. To add a new command to Whittler, write a new function that contains the
 # logic for the command, and add it to this dictionary.

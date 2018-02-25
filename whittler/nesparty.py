@@ -37,17 +37,17 @@ pastebin_key = "65fa91203e65620bc5ecb2b9a6790743"
 # Add limit based on the one who set it
 
 # This is the maximum number of games per user. If it's -1, then it's infinite.
-max_per_user = 2
+max_per_user = 1
 
 # You can give subs a different max than regular users.
-max_per_sub = max_per_user
+max_per_sub = 2
 
 # This is the chance multiplier for the age of an entry. Increasing this increases the liklihood
 # that games that were added earlier will be picked.
 # For instance, if it is set to 2.0, then the oldest game is twice as likely to be picked than the
 # newest game.
 # Setting it to 1.0 means that all games are the same chance.
-time_multiplier = 1.0
+time_multiplier = 1
 
 games = []
 
@@ -117,8 +117,9 @@ def pick(games, user, sub_only):
 
 def add_game(user_data, message):
     global guest_list_url
+    print (len(message))
     if len(message) == 0:
-        "You need to enter a game name"
+        return "You need to enter a game name"
     
     sub = user_data["sub"]
     user = user_data["user"]
@@ -150,39 +151,31 @@ def add_game(user_data, message):
     
     guest_list_url = ""
     # This is kind of pointless, but it's fun.
-    last_digit = num_games % 10
-    if last_digit == 1:
-        suffix = "st"
-    elif last_digit == 2:
-        suffix = "nd"
-    elif last_digit == 3:
-        suffix = "rd"
-    else:
-        suffix = "th"
-    return user + " added " + message + " as the " + str(num_games) + suffix + " game"
+    return user + " added " + message + " as game #" + str(num_games)
 
 def remove_game(user_data, message):
     global guest_list_url
     game_num = 0
     try:
-        game_num = int(message)
+        game_num = int(message) -1
     except:
-        i = 0
-        while i < len(games):
-            if games[i]["game"].startswith(message):
-                game_num = i
-                break
-            i += 1
+        return "games are removed by number"
+#        i = 0
+#        while i < len(games):
+#            if games[i]["game"].startswith(message):
+#                game_num = i
+#                break
+#            i += 1
     
     try:
         if not user_data["mod"]:
-            if games[game_num]["user"] != user_data["user"]:
-                return "Only a mod can remove someone else's game"
+#            if games[game_num]["user"] != user_data["user"]:
+            return "Only a mod can remove individual games"
         
         del games[game_num]
         # Clear the guest list URL so it will have to be regenerated.
         guest_list_url = ""
-        return "Removed game number " + str(game_num)
+        return "Removed game number " + str(game_num + 1 )
     except:
         pass
     
@@ -191,7 +184,9 @@ def remove_game(user_data, message):
 def remove_user(user_data, message):
     global guest_list_url
     user = user_data["user"]
-    if user_data["user"] != user or not user_data["mod"]:
+    print (user)
+    print (user_data['user'])
+    if user_data["user"] != user:
         return "Only mods can remove another user"
     
     i = 0
@@ -207,7 +202,7 @@ def remove_user(user_data, message):
         # Clear the guest list URL so it will have to be regenerated.
         guest_list_url = ""
     
-    return "Removed " + str(removed) + " games for user " + user
+    return "Removed " + str(removed) + " game(s) for user " + user
 
 def clear(user_data, message):
     global guest_list_url
