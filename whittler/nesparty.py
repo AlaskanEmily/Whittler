@@ -247,7 +247,19 @@ def current_game(user_data, message):
     else:
         return "Current game is " + picked_games[-1]["game"]
 
+def current_user(user_data, message):
+    if len(picked_games) == 0:
+        return "No current game"
+    else:
+        user = picked_games[-1]["user"]
+        game = picked_games[-1]["game"]
+        if not user:
+            return "It is a mystery who invited " + game
+        else:
+            return "The game " + game + " was invited by " + user
+
 def set_game(user_data, message):
+    global picked_games
     if not user_data["mod"]:
         return "Only modes can set the game"
     # Add a dummy game.

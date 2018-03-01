@@ -44,6 +44,7 @@ commands = {
     "clear":nesparty.clear,
     "setgame":nesparty.set_game,
     "game":nesparty.current_game,
+    "blame":nesparty.current_user,
     "undo":nesparty.undo
 }
 
